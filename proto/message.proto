@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package demo.v1;
+
+// Messages
+message JobId {
+  string id = 1; // Unique job identifier
+}
+
+message JobSpec {
+  string name = 1;
+  string queue = 2;
+  int32 nodes = 3;
+  int32 cpus_per_node = 4;
+  string executable = 5;
+  repeated string args = 6;
+}
+
+enum JobState {
+    JOB_STATE_UNSPECIFIED = 0;
+    JOB_STATE_PENDING = 1;
+    JOB_STATE_RUNNING = 2;
+    JOB_STATE_COMPLETED = 3;
+    JOB_STATE_FAILED = 4;
+}
+
+message JobStatus {
+    string id = 1;
+    JobState state = 2;
+    string message = 3;
+    int64 timestamp_unix = 4;
+}
+
+enum JobEventType {
+    JOB_EVENT_TYPE_UNSPECIFIED = 0;
+    JOB_EVENT_TYPE_STARTED = 1;
+    JOB_EVENT_TYPE_NODE_ALLOCATED = 2;
+    JOB_EVENT_TYPE_FAILED = 3;
+}
+
+message JobEvent {
+    string id = 1;
+    JobEventType type = 2;
+    string detail = 3;
+    int64 timestamp_unix = 4;
+}
+
+message JobResult {
+  string id = 1;
+  int32 exit_code = 2;
+  string output_uri = 3;
+}
+
+message JobMetrics {
+  string id = 1;
+  double cpu_usage_percent = 2;
+  double memory_usage_mb = 3;
+  int64 timestamp_unix = 4;
+}
+
+message MetricsSummary {
+  string id = 1;
+  double avg_cpu_usage_percent = 2;
+  double avg_memory_usage_mb = 3;
+}
+
+// Control commands for bidirectional streaming session
+enum CommandAction {
+    COMMAND_ACTION_UNSPECIFIED = 0;
+    COMMAND_ACTION_PAUSE = 1;
+    COMMAND_ACTION_RESUME = 2;
+    COMMAND_ACTION_SCALE = 3;
+}
+
+message Command {
+    string id = 1; // Job ID the command targets
+    CommandAction action = 2; // e.g. PAUSE, RESUME, SCALE
+    int32 scale_cpus = 3; // optional, used when action == SCALE
+    int64 timestamp_unix = 4;
+}

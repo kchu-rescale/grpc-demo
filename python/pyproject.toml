@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "protodemo"
+version = "0.1.0"
+dependencies = [
+  "grpcio==1.65.4",
+  "grpcio-tools==1.65.4",
+  "protobuf>=4.25.3,<6",
+]
+
+[tool.pyright]
+include = ["python"]
+reportMissingImports = "warning"
+pythonVersion = "3.10"
+venvPath = "."
+venv = ".venv"

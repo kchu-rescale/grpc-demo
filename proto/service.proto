@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package demo.v1;
+
+import "message.proto";
+
+// Service
+service JobOrchestrationService {
+
+  // Unary: Submit a job specification and get a job ID
+  rpc SubmitJob(JobSpec) returns (JobId);
+
+  // Server streaming: Get real-time job events (state changes, allocation logs)
+  // return large dataset in chunks
+  rpc StreamJobEvents(JobId) returns (stream JobEvent);
+
+  // Client streaming: Upload periodic metrics for a job, get an aggregated summary
+  // upload large files in chunks
+  rpc UploadJobMetrics(stream JobMetrics) returns (MetricsSummary);
+
+  // Bidirectional streaming: Interactive job control session (pause/resume/scale)
+  rpc JobControl(stream Command) returns (stream JobStatus);
+}
